@@ -1,27 +1,30 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 
-const Search = function ({ setFetchUrl, setCurrentPage, setTotalPages }) {
+const Search = function ({ onSearch }) {
 
-  function search(e) {
+  const [searchVal, setSearchVal] = useState('');
+ 
+  const handleChange = useCallback((e) => {
     e.preventDefault();
-    const searchParam = document.getElementById('searchCriteria').value;
-    setCurrentPage(0);
-    setTotalPages(0);
-    setFetchUrl(`https://api.thecatapi.com/v1/breeds/search?q=${searchParam}`);
-  }
+    setSearchVal(e.currentTarget.value);
+  }, []);
+
+  const handleSearch = useCallback(() => {
+    onSearch && onSearch(searchVal);
+  }, [searchVal, onSearch]);
   
   return (
-    <form id="listCat" className="w-100">
+    <div className="search w-100">
         <div className="form-group row d-flex justify-content-start">
             <div className="col-sm-2 col-form-label py-0 text-light">
                 <label htmlFor="searchCriteria" className="col-12 h-100 bg-secondary border rounded d-flex align-items-center">Get cat by name</label>
             </div>
             <div className="col-sm-6">
-                <input type="text" id="searchCriteria" className="form-control h-100" placeholder="your search..." required/>
+                <input type="text" id="searchCriteria" className="form-control h-100" placeholder="your search..." required onChange={handleChange}/>
             </div>
-            <input type="submit" className="col-sm-2 btn btn-secondary" value="Submit" onClick={search}/>
+            <input type="button" className="col-sm-2 btn btn-secondary" value="Submit" onClick={handleSearch}/>
         </div>
-    </form>
+    </div>
   );
 };
 
