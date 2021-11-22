@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../css/Navigate.css';
 
-const Navigate = function ({ currentPage, setCurrentPage, totalPages }) {
+const Navigate = function ({  currentPage, setCurrentPage, setFetchUrl, totalPages}) {
+
+  useEffect(() => {
+    const elemPrev = document.getElementsByClassName('prev')[0];
+    const elemNext = document.getElementsByClassName('next')[0];
+    (currentPage >= 1) ? elemPrev.style.visibility = 'visible' : elemPrev.style.visibility = 'hidden';
+    (currentPage === totalPages) ? elemNext.style.visibility = 'hidden' : elemNext.style.visibility = 'visible';
+    if (currentPage === 0 && totalPages === 0) {
+      elemNext.style.visibility = 'hidden';
+      elemPrev.style.visibility = 'hidden';
+    }
+  }, [currentPage, totalPages])
 
   function navigate(e) {
     e.preventDefault();
     const event = e.currentTarget.innerText;
     const newCurrentPage = (event.toUpperCase() === 'NEXT' ? currentPage + 1 : (event.toUpperCase() === 'PREV' ? currentPage - 1 : currentPage));
     setCurrentPage(newCurrentPage);
-
-    const elemPrev = document.getElementsByClassName('prev')[0];
-    (newCurrentPage >= 1) ? elemPrev.style.visibility = 'visible' : elemPrev.style.visibility = 'hidden';
-    const elemNext = document.getElementsByClassName('next')[0];
-    (newCurrentPage === totalPages) ? elemNext.style.visibility = 'hidden' : elemNext.style.visibility = 'visible';
+    setFetchUrl(`https://api.thecatapi.com/v1/breeds?page=${newCurrentPage}&limit=12`);    
   }
 
   return (

@@ -1,16 +1,15 @@
 import React from 'react';
 
-const Search = function ({ setFetchUrl }) {
+const Search = function ({ setFetchUrl, setCurrentPage, setTotalPages }) {
 
   function search(e) {
     e.preventDefault();
     const searchParam = document.getElementById('searchCriteria').value;
+    setCurrentPage(0);
+    setTotalPages(0);
     setFetchUrl(`https://api.thecatapi.com/v1/breeds/search?q=${searchParam}`);
-
-    document.getElementsByClassName('prev')[0].style.visibility = 'hidden';
-    document.getElementsByClassName('next')[0].style.visibility = 'hidden';
   }
-
+  
   return (
     <form id="listCat" className="w-100">
         <div className="form-group row d-flex justify-content-start">
